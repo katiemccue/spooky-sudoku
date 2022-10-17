@@ -9,11 +9,15 @@ let pumpkin_img = "https://static.wixstatic.com/media/e9dfbb_3f3491b97fbf498b9ad
 let tree_img = "https://static.wixstatic.com/media/e9dfbb_3fbbfa6b150f470699dea222388d1af0~mv2.png";
 let leaf_img = "https://static.wixstatic.com/media/e9dfbb_5158a563f8c249e987c0f3ff992d80e7~mv2.jpeg";
 
-let symbol = ""
+let symbol;
+let layout;
+let total_size;
 
 $w.onReady(function () {
     let imgArr = $w("Image");
     console.log("Test images: " + imgArr);
+
+    set_init(imgArr.length);
 
     // sets the onclick for all images on page.
     // this will allow for image changing based on the selected symbol.
@@ -23,27 +27,66 @@ $w.onReady(function () {
             let name = "#" + event.target.id;
             image_flip(name);
         })
-        // set to blank image due to WiX base image src.
-        img.src = white_img;
     })
-
 });
 
 // flip image based on the current symbol held
 function image_flip(name) {
     console.log(name + " clicked");
     switch (symbol) {
-    case "":
-        break;
-    case "pumpkin":
-        $w(name).src = pumpkin_img;
-        break;
-    case "tree":
-        $w(name).src = tree_img;
-        break;
-    case "leaf":
-        $w(name).src = leaf_img;
-        break;
+        case "":
+            break;
+        case "pumpkin":
+            $w(name).src = pumpkin_img;
+            break;
+        case "tree":
+            $w(name).src = tree_img;
+            break;
+        case "leaf":
+            $w(name).src = leaf_img;
+            break;
+    }
+}
+
+// set the initial board
+function set_init(size) {
+    // potential layouts
+    let layouts = [
+        ["", "", "p", "t", "", "l", "", "", ""],
+        ["p", "t", "", "t", "", "", "", "", ""],
+        ["p", "", "", "", "", "", "", "t", "p"],
+        ["", "l", "", "", "", "", "l", "t", ""]
+    ];
+
+    // pick random layout
+    let rand_layout = Math.floor(Math.random() * 4);
+
+    // set puzzle variables
+    layout = layouts[rand_layout];
+    total_size = size;
+    symbol = "";
+
+    apply_layout();
+}
+
+// apply layout to all spaces
+function apply_layout() {
+    for (let i = 0; i < total_size; i++) {
+        let img = "#image" + i;
+        switch(layout[i]) {
+            case "":
+                $w(img).src = white_img;
+                break;
+            case "p":
+                $w(img).src = pumpkin_img;
+                break;
+            case "t":
+                $w(img).src = tree_img;
+                break;
+            case "l":
+                $w(img).src = leaf_img;
+                break;
+        }
     }
 }
 
@@ -111,4 +154,9 @@ export function check_solution(event) {
     }
 
     console.log("Win!");
+}
+
+export function reset(event) {
+    console.log("Resetting layout");
+    apply_layout();
 }
