@@ -5,15 +5,20 @@
 // Velo API Reference: https://www.wix.com/velo/reference/api-overview/introduction
 
 let white_img = "https://static.wixstatic.com/media/e9dfbb_1d213395c599402982a485814ac9a4d7~mv2.jpeg";
-let pumpkin_img = "https://static.wixstatic.com/media/e9dfbb_3f3491b97fbf498b9ad8b516a57c0d0c~mv2.png";
-let tree_img = "https://static.wixstatic.com/media/e9dfbb_3fbbfa6b150f470699dea222388d1af0~mv2.png";
-let leaf_img = "https://static.wixstatic.com/media/e9dfbb_5158a563f8c249e987c0f3ff992d80e7~mv2.jpeg";
+let pumpkin_img = "https://static.wixstatic.com/media/4451e5_6e10fefb10cc49d29727b4bd58226192~mv2.png";
+let candy_img = "https://static.wixstatic.com/media/4451e5_6b753ce873ea41a198a86d9b1c69b9e3~mv2.png";
+let cat_img = "https://static.wixstatic.com/media/4451e5_48351e5cd7f24afd92a6a8582629274f~mv2.png";
 
 let symbol;
 let layout;
 let total_size;
+let count;
+let win;
 
 $w.onReady(function () {
+    count = 0;
+    win = false;
+
     let imgArr = $w("Image");
     console.log("Test images: " + imgArr);
 
@@ -28,6 +33,16 @@ $w.onReady(function () {
             image_flip(name);
         })
     })
+
+    let countup = setInterval(function() {
+        if (!win) {
+            count += 1;
+
+            var m = Math.floor(count % 3600 / 60);
+            var s = Math.floor(count % 3600 % 60);
+            $w('#counter').text = "" + m + ":" + s;
+        }
+    }, 1000)
 });
 
 // flip image based on the current symbol held
@@ -39,11 +54,11 @@ function image_flip(name) {
         case "pumpkin":
             $w(name).src = pumpkin_img;
             break;
-        case "tree":
-            $w(name).src = tree_img;
+        case "candy":
+            $w(name).src = candy_img;
             break;
-        case "leaf":
-            $w(name).src = leaf_img;
+        case "cat":
+            $w(name).src = cat_img;
             break;
     }
 }
@@ -52,10 +67,10 @@ function image_flip(name) {
 function set_init(size) {
     // potential layouts
     let layouts = [
-        ["", "", "p", "t", "", "l", "", "", ""],
-        ["p", "t", "", "t", "", "", "", "", ""],
-        ["p", "", "", "", "", "", "", "t", "p"],
-        ["", "l", "", "", "", "", "l", "t", ""]
+        ["", "", "p", "c", "", "a", "", "", ""],
+        ["p", "c", "", "c", "", "", "", "", ""],
+        ["p", "", "", "", "", "", "", "c", "p"],
+        ["", "a", "", "", "", "", "a", "c", ""]
     ];
 
     // pick random layout
@@ -80,11 +95,11 @@ function apply_layout() {
             case "p":
                 $w(img).src = pumpkin_img;
                 break;
-            case "t":
-                $w(img).src = tree_img;
+            case "c":
+                $w(img).src = candy_img;
                 break;
-            case "l":
-                $w(img).src = leaf_img;
+            case "a":
+                $w(img).src = cat_img;
                 break;
         }
     }
@@ -95,12 +110,12 @@ export function button_pumpkin(event) {
     symbol = "pumpkin";
 }
 
-export function button_tree(event) {
-    symbol = "tree";
+export function button_candy(event) {
+    symbol = "candy";
 }
 
-export function button_leaf(event) {
-    symbol = "leaf";
+export function button_cat(event) {
+    symbol = "cat";
 }
 
 export function check_solution(event) {
@@ -154,6 +169,7 @@ export function check_solution(event) {
     }
 
     console.log("Win!");
+    win = true;
 }
 
 export function reset(event) {
